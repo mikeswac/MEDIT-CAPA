@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Capacitaciones MEDIT</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #lienzo {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <h1>Capacitaciones MEDIT</h1>
@@ -16,7 +26,7 @@
     <input type="submit" value="Enviar">
   </form>
 
-  <canvas id="lienzo" width="400" height="300"></canvas>
+  <canvas id="lienzo"></canvas>
 
   <script>
     var canvas = new fabric.Canvas('lienzo', {
@@ -37,29 +47,9 @@
         dibujo: dibujoDataURL
       };
 
-      var spreadsheetId = 'TU_ID_DE_HOJA'; // Reemplaza con tu ID real
-      var range = 'NOMBRE_DE_LA_HOJA!' + 'A2:C2'; // Reemplaza con tu hoja y rango
-      var url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?valueInputOption=RAW`;
-
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer TU_TOKEN_DE_AUTENTICACION', // Reemplaza con tu token
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          values: [[datos.nombre, datos.rut, datos.dibujo]]
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Respuesta del servidor:', data);
-      })
-      .catch(error => {
-        console.error('Error al enviar los datos:', error);
-      });
+      console.log(datos);
+      // Envío a Google Sheets u otro servicio aquí
     });
   </script>
 </body>
 </html>
-
