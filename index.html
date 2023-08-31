@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Capacitaciones MEDIT</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.1/fabric.min.js"></script>
+</head>
+<body>
+  <h1>Capacitaciones MEDIT</h1>
+  <form id="miFormulario">
+    <label for="nombre">Nombre Dr(a):</label>
+    <input type="text" id="nombre" name="nombre" required><br><br>
+
+    <label for="rut">RUT:</label>
+    <input type="text" id="rut" name="rut" required><br><br>
+
+    <input type="submit" value="Enviar">
+  </form>
+
+  <canvas id="lienzo" width="400" height="300"></canvas>
+
+  <script>
+    var canvas = new fabric.Canvas('lienzo', {
+      isDrawingMode: true
+    });
+
+    var formulario = document.getElementById('miFormulario');
+    formulario.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var nombre = document.getElementById('nombre').value;
+      var rut = document.getElementById('rut').value;
+      var dibujoDataURL = canvas.toDataURL();
+
+      var datos = {
+        nombre: nombre,
+        rut: rut,
+        dibujo: dibujoDataURL
+      };
+
+      var spreadsheetId = 'TU_ID_DE_HOJA'; // Reemplaza con tu ID real
+      var range = 'NOMBRE_DE_LA_HOJA!' + 'A2:C2'; // Reemplaza con tu hoja y rango
+      var url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?valueInputOption=RAW`;
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer TU_TOKEN_DE_AUTENTICACION', // Reemplaza con tu token
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          values: [[datos.nombre, datos.rut, datos.dibujo]]
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Respuesta del servidor:', data);
+      })
+      .catch(error => {
+        console.error('Error al enviar los datos:', error);
+      });
+    });
+  </script>
+</body>
+</html>
 
